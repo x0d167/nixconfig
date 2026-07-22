@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ../../modules/common/zsa-keyboard.nix
     ../../modules/common/yubikey.nix
+    ../../modules/common/gpg-card.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
