@@ -7,6 +7,7 @@
     ./modules/git.nix 
     ./modules/hyprland.nix 
     ./modules/kitty.nix 
+    ./modules/vicinae.nix
     ./modules/xdg.nix
   ];
 

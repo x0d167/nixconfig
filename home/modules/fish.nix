@@ -24,6 +24,10 @@
     };
 
     functions = {
+      nixconfig = ''
+        cd ~/.config/nixconfig
+      '';
+
       fish_greeting = ''
         set_color bryellow
         echo (date "+%A • %H:%M")

@@ -4,6 +4,7 @@
     # ── General CLI ──
     fd
     file
+    git
     jq
     fzf
     killall
@@ -69,7 +70,6 @@
     mimeo
     qt6.qtwayland
     qt6Packages.qt6ct
-    vicinae
     lowfi
 
     # ── System / hardware ──

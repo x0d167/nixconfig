@@ -549,7 +549,7 @@ hl.workspace_rule({
 
 local mod = "SUPER"
 local term = "kitty"
-local browser = "~/.local/bin/zen-browser"
+local browser = "zen"
 local files = "nautilus"
 
 -----------------------

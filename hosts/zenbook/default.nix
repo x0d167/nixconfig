@@ -3,12 +3,19 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/common/zsa-keyboard.nix
-    ../../modules/common/yubikey.nix
+    ../../modules/common/audio.nix
+    ../../modules/common/bluetooth.nix
+    ../../modules/common/browser.nix
     ../../modules/common/gpg-card.nix
     ../../modules/common/hyprland.nix
-    ../../modules/common/shell.nix
     ../../modules/common/packages.nix
+    ../../modules/common/shell.nix
+    ../../modules/common/virtualization.nix
+    ../../modules/common/yubikey.nix
+    ../../modules/common/zsa-keyboard.nix
+    ../../modules/common/security.nix
+    ../../modules/common/syncthing.nix
+    ../../modules/common/tailscale.nix
   ];
 
   boot = {
@@ -69,21 +76,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
-    git
-    neovim
-  ];
-
-  services.openssh = {
-    enable = true;
-    settings = {
-      PubkeyAuthentication = true;
-      PasswordAuthentication = false;
-    };
-  };
+  services.udisks2.enable = true;
+  documentation.man.man-db.enable = true;
 
   system.stateVersion = "26.05";
 }
