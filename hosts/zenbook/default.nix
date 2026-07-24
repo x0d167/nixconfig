@@ -8,6 +8,7 @@
     ../../modules/common/gpg-card.nix
     ../../modules/common/hyprland.nix
     ../../modules/common/shell.nix
+    ../../modules/common/packages.nix
   ];
 
   boot = {
@@ -80,7 +81,7 @@
     enable = true;
     settings = {
       PubkeyAuthentication = true;
-      PasswordAuthentication = true; # temp: revisit once yubikey/keys are live
+      PasswordAuthentication = false;
     };
   };
 

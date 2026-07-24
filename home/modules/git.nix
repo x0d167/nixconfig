@@ -1,20 +1,80 @@
-{ ... }:
+{ pkgs,... }:
 {
   programs.git = {
     enable = true;
     settings = {
-        user = {
-	    name = "x0d167";
-	    email = "x0d1.67@proton.me";
-	    signingkey = "1A6A98C5E6F6ACE952F77995FD3DA856728F87D6";
-	};
-	commit.gpgsign = true;
-	init.defaultBranch = "main";
-	pull.rebase = true;
-        
-	# pinned to the specific resident credential recovered on this host —
-        # update if a different physical key becomes primary here
-        core.sshCommand = "ssh -i ~/.ssh/id_ed25519_sk_rk_key2";
+      user = {
+        name = "x0d167";
+        email = "x0d1.67@proton.me";
+        signingkey = "1A6A98C5E6F6ACE952F77995FD3DA856728F87D6"; # key2 Sign subkey
+      };
+      commit.gpgsign = true;
+
+      alias = {
+        gs = "status";
+        ga = "add";
+        gaa = "add --all";
+        gd = "diff | diffnav";
+        co = "checkout";
+        br = "branch";
+        cm = "commit -m";
+        ps = "push";
+        pl = "pull";
+        lg = "log --graph --oneline --decorate";
+      };
+
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+      pull.rebase = true;
+      merge.conflictstyle = "diff3";
+      diff.colorMoved = "default";
+      color.ui = true;
+
+      core = {
+        editor = "nvim";
+        whitespace = "trailing-space,space-before-tab";
+        sshCommand = "ssh -i ~/.ssh/id_ed25519_sk_rk_key2";
+      };
+
+      url."git@github.com:".insteadOf = [ "gh:" "https://github.com/" ];
+    };
+    ignores = [ "*.swp" "*~" ".DS_Store" "result" ".direnv" ];
+  };
+
+  programs.gh = {
+    enable = true;
+    settings.git_protocol = "ssh";
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = false;
+    options = {
+      line-numbers = true;
+      side-by-side = true;
+      diff-so-fancy = true;
+      navigate = true;
     };
   };
+
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    settings = {
+      "*" = {
+        addKeysToAgent = "1h";
+        controlMaster = "auto";
+        controlPath = "~/.ssh/control-%r@%h:%p";
+        controlPersist = "10m";
+        forwardAgent = false;
+        compression = false;
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+        hashKnownHosts = false;
+        userKnownHostsFile = "~/.ssh/known_hosts";
+      };
+    };
+  };
+
+  home.packages = with pkgs; [ diffnav serie ];
 }

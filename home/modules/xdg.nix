@@ -63,5 +63,9 @@
   CABAL_CONFIG = "$HOME/.config/cabal";
   STACK_XDG = "$HOME/.config/stack";
   TERMINAL = "kitty";
+  EDITOR = "nvim";
+  VISUAL = "nvim";
+  CLICOLOR = "1";
+  MANPAGER = "batman";
   };
 }

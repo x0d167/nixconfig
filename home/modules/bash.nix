@@ -8,6 +8,12 @@
       if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ] && [ -z "$SSH_CONNECTION" ]; then
           exec start-hyprland
       fi
+
+      # Auto-launch fish for interactive SSH sessions only (not local tty/console)
+      if [ -n "$SSH_CONNECTION" ] && [ -z "$FISH_STARTED" ] && [[ $- == *i* ]]; then
+          export FISH_STARTED=1
+	  exec fish
+      fi
     '';
 
     shellAliases = {

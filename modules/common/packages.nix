@@ -1,0 +1,99 @@
+{ pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    # ── General CLI ──
+    fd
+    file
+    jq
+    fzf
+    killall
+    lsof
+    man-pages
+    ripgrep
+    ripgrep-all
+    tree
+    unzip
+    wget
+    xdg-utils
+    socat
+    entr
+    duf
+    ncdu
+    htop
+    btop
+    gping
+    hexyl
+    tldr
+    gum
+    stow
+    eza
+    imagemagick
+
+    # ── Editor / LSP / formatting support ──
+    neovim
+    vim
+    nixd
+    nixfmt
+    marksman
+    tinymist
+    tree-sitter
+    stylua
+    shellcheck
+    shfmt
+    treefmt
+
+    # ── bat ecosystem ──
+    bat
+    bat-extras.batdiff
+    bat-extras.batgrep
+    bat-extras.batman
+    bat-extras.batpipe
+    bat-extras.batwatch
+    bat-extras.prettybat
+
+    # ── Media / graphics ──
+    ffmpeg
+    mpv
+    vlc
+    imv
+    gimp
+    satty
+
+    # ── Desktop / session utilities ──
+    udiskie
+    pavucontrol
+    pamixer
+    cava
+    nautilus
+    libreoffice
+    mimeo
+    qt6.qtwayland
+    qt6Packages.qt6ct
+    vicinae
+    lowfi
+
+    # ── System / hardware ──
+    tlp
+    tlp-pd
+    libnotify
+    openssl
+    coreutils
+    curl
+
+    # ── Debuggers ──
+    gdb
+    lldb
+
+    # ── Fun / misc ──
+    unimatrix
+    glow
+
+    # ── Fish function dependency ──
+    trash-cli
+
+    # ── Nix tooling ──
+    nix-output-monitor
+    nix-tree
+    nvd
+  ];
+}

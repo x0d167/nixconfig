@@ -3,6 +3,7 @@
 {
   imports = [ 
     ./modules/bash.nix
+    ./modules/fish.nix
     ./modules/git.nix 
     ./modules/hyprland.nix 
     ./modules/kitty.nix 
