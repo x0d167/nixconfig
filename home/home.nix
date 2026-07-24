@@ -1,7 +1,13 @@
 { username, ... }:
 
 {
-  imports = [ ./modules/git.nix ];
+  imports = [ 
+    ./modules/bash.nix
+    ./modules/git.nix 
+    ./modules/hyprland.nix 
+    ./modules/kitty.nix 
+    ./modules/xdg.nix
+  ];
 
   home.username = username;
   home.homeDirectory = "/home/${username}";

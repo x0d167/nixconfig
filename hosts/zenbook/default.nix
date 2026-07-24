@@ -6,16 +6,38 @@
     ../../modules/common/zsa-keyboard.nix
     ../../modules/common/yubikey.nix
     ../../modules/common/gpg-card.nix
+    ../../modules/common/hyprland.nix
+    ../../modules/common/shell.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.initrd.luks.devices."luks-41209ad0-8e2e-48fe-a783-160306a71a71".device =
-    "/dev/disk/by-uuid/41209ad0-8e2e-48fe-a783-160306a71a71";
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    kernelPackages = pkgs.linuxPackages_latest;
+    initrd = {
+      systemd.enable = true;
+      luks.devices."luks-0e6bb8a1-6546-4f60-966f-b928b78ffdfc" = {
+        device = "/dev/disk/by-uuid/0e6bb8a1-6546-4f60-966f-b928b78ffdfc";
+	crypttabExtraOpts = [ "fido2-device=auto" ];
+      };
+    };
+    plymouth = {
+      enable = false;
+    };
+    consoleLogLevel = 3;
+    kernelParams = [ "quiet" "splash" ];
+  };
+
+  zramSwap.enable = true;
+
+
 
   networking.hostName = "zennix";
   networking.networkmanager.enable = true;
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   time.timeZone = "America/Chicago";
 
