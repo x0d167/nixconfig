@@ -583,7 +583,8 @@ hl.bind(mod .. " + E", hl.dsp.exec_cmd("pkill " .. files .. " || " .. files), { 
 ---- WINDOW MGMT ------
 -----------------------
 
-hl.bind(mod .. " + Q", hl.dsp.window.kill(), { description = "Close active window" })
+hl.bind(mod .. " + Q", hl.dsp.window.kill(activewindow), { description = "Kill active window" })
+hl.bind(mod .. " + W", hl.dsp.window.close(activewindow), { description = "Close active window" })
 hl.bind("CTRL + ALT + F", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Toggle fullscreen" })
 hl.bind(mod .. " + V", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle floating" })
 -- hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd(toggleallfloat), { description = "Toggle all floating" })
@@ -749,7 +750,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { description = "Session menu" })
 hl.bind("CTRL + ALT + L", hl.dsp.exec_cmd("noctalia msg session lock"), { description = "Lock screen" })
 hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), { description = "Launcher toggle" })
-hl.bind(mod .. " + W", hl.dsp.exec_cmd("noctalia msg panel-toggle wallpaper"), { description = "Wallpaper selector" })
+hl.bind(mod .. " + ALT + W", hl.dsp.exec_cmd("noctalia msg panel-toggle wallpaper"), { description = "Wallpaper selector" })
 hl.bind(
 	mod .. " + ALT + S",
 	hl.dsp.exec_cmd("noctalia msg settings-toggle"),

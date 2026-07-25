@@ -1,7 +1,9 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
+let
+  home = config.home.homeDirectory;
+in
 {
   home.packages = with pkgs; [ xdg-user-dirs ];
-
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
@@ -15,57 +17,53 @@
     publicShare = "$HOME/.arc/public";
     projects = "$HOME/src/projects";
   };
-
   home.sessionVariables = {
-  XDG_DATA_HOME = "$HOME/.local/share";
-  XDG_CONFIG_HOME = "$HOME/.config";
-  XDG_STATE_HOME = "$HOME/.local/state";
-  XDG_CACHE_HOME = "$HOME/.cache";
-
-  XDG_DOWNLOAD_DIR = "$HOME/box/in";
-  XDG_DOCUMENTS_DIR = "$HOME/ref/docs";
-  XDG_MUSIC_DIR = "$HOME/ref/lib/music";
-  XDG_PICTURES_DIR = "$HOME/ref/img/pics";
-  XDG_VIDEOS_DIR = "$HOME/ref/img/vid";
-  XDG_DESKTOP_DIR = "$HOME/.arc/desktop";
-  XDG_TEMPLATES_DIR = "$HOME/ref/templates";
-  XDG_PUBLICSHARE_DIR = "$HOME/.arc/public";
-  XDG_PROJECTS_DIR = "$HOME/src/projects";
-
-  WALLPAPER_DIR = "$HOME/ref/img/wall";
-  SCREENSHOT_DIR = "$HOME/ref/img/shot";
-  MY_HOME_SYNC = "$HOME/sync";
-
-  GIT_CONFIG_GLOBAL = "$HOME/.config/git/config";
-  ZDOTDIR = "$HOME/.config/zsh";
-  GNUPGHOME = "$HOME/.local/share/gnupg";
-  CARGO_HOME = "$HOME/.local/share/cargo";
-  RUSTUP_HOME = "$HOME/.local/share/rustup";
-  GOPATH = "$HOME/.local/share/go";
-  GOBIN = "$HOME/.local/share/go/bin";
-  GOMODCACHE = "$HOME/.cache/go/mod";
-  NPM_CONFIG_USERCONFIG = "$HOME/.config/npm/npmrc";
-  NPM_CONFIG_CACHE = "$HOME/.cache/npm";
-  FFMPEG_DATADIR = "$HOME/.config/ffmpeg";
-  RUFF_CACHE_DIR = "$HOME/.cache/ruff";
-  OPENAUDIBLE_HOME = "$HOME/.config/openaudible";
-  GHCUP_INSTALL_BASE_PREFIX = "$HOME/.local/share";
-  GHCUP_USE_XDG_DIRS = "1";
-  ANDROID_HOME = "$HOME/.local/share/android";
-  ANDROID_USER_HOME = "$HOME/.config/android";
-  PYTHON_HISTORY = "$HOME/.local/state/python/history";
-  SOAR_CONFIG = "$HOME/.config/soar/config.toml";
-  SOAR_BIN = "$HOME/.local/share/soar/bin";
-  SOAR_DB = "$HOME/.local/share/soar/db";
-  SOAR_CACHE = "$HOME/.cache/soar/cache";
-  SOAR_PACKAGES = "$HOME/.local/share/soar/packages";
-  SOAR_REPOSITORIES = "$HOME/.local/share/soar/repos";
-  CABAL_CONFIG = "$HOME/.config/cabal";
-  STACK_XDG = "$HOME/.config/stack";
-  TERMINAL = "kitty";
-  EDITOR = "nvim";
-  VISUAL = "nvim";
-  CLICOLOR = "1";
-  MANPAGER = "batman";
+    XDG_DATA_HOME = "${home}/.local/share";
+    XDG_CONFIG_HOME = "${home}/.config";
+    XDG_STATE_HOME = "${home}/.local/state";
+    XDG_CACHE_HOME = "${home}/.cache";
+    XDG_DOWNLOAD_DIR = "${home}/box/in";
+    XDG_DOCUMENTS_DIR = "${home}/ref/docs";
+    XDG_MUSIC_DIR = "${home}/ref/lib/music";
+    XDG_PICTURES_DIR = "${home}/ref/img/pics";
+    XDG_VIDEOS_DIR = "${home}/ref/img/vid";
+    XDG_DESKTOP_DIR = "${home}/.arc/desktop";
+    XDG_TEMPLATES_DIR = "${home}/ref/templates";
+    XDG_PUBLICSHARE_DIR = "${home}/.arc/public";
+    XDG_PROJECTS_DIR = "${home}/src/projects";
+    WALLPAPER_DIR = "${home}/ref/img/wall";
+    SCREENSHOT_DIR = "${home}/ref/img/shot";
+    MY_HOME_SYNC = "${home}/sync";
+    GIT_CONFIG_GLOBAL = "${home}/.config/git/config";
+    ZDOTDIR = "${home}/.config/zsh";
+    GNUPGHOME = "${home}/.local/share/gnupg";
+    CARGO_HOME = "${home}/.local/share/cargo";
+    RUSTUP_HOME = "${home}/.local/share/rustup";
+    GOPATH = "${home}/.local/share/go";
+    GOBIN = "${home}/.local/share/go/bin";
+    GOMODCACHE = "${home}/.cache/go/mod";
+    NPM_CONFIG_USERCONFIG = "${home}/.config/npm/npmrc";
+    NPM_CONFIG_CACHE = "${home}/.cache/npm";
+    FFMPEG_DATADIR = "${home}/.config/ffmpeg";
+    RUFF_CACHE_DIR = "${home}/.cache/ruff";
+    OPENAUDIBLE_HOME = "${home}/.config/openaudible";
+    GHCUP_INSTALL_BASE_PREFIX = "${home}/.local/share";
+    GHCUP_USE_XDG_DIRS = "1";
+    ANDROID_HOME = "${home}/.local/share/android";
+    ANDROID_USER_HOME = "${home}/.config/android";
+    PYTHON_HISTORY = "${home}/.local/state/python/history";
+    SOAR_CONFIG = "${home}/.config/soar/config.toml";
+    SOAR_BIN = "${home}/.local/share/soar/bin";
+    SOAR_DB = "${home}/.local/share/soar/db";
+    SOAR_CACHE = "${home}/.cache/soar/cache";
+    SOAR_PACKAGES = "${home}/.local/share/soar/packages";
+    SOAR_REPOSITORIES = "${home}/.local/share/soar/repos";
+    CABAL_CONFIG = "${home}/.config/cabal";
+    STACK_XDG = "${home}/.config/stack";
+    TERMINAL = "kitty";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    CLICOLOR = "1";
+    MANPAGER = "batman";
   };
 }

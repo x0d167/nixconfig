@@ -57,24 +57,6 @@
     };
   };
 
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    settings = {
-      "*" = {
-        addKeysToAgent = "1h";
-        controlMaster = "auto";
-        controlPath = "~/.ssh/control-%r@%h:%p";
-        controlPersist = "10m";
-        forwardAgent = false;
-        compression = false;
-        serverAliveInterval = 60;
-        serverAliveCountMax = 3;
-        hashKnownHosts = false;
-        userKnownHostsFile = "~/.ssh/known_hosts";
-      };
-    };
-  };
 
   home.packages = with pkgs; [ diffnav serie ];
 }

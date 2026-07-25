@@ -21,7 +21,10 @@
 
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+	configurationLimit = 5;
+      };
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
@@ -32,21 +35,34 @@
 	crypttabExtraOpts = [ "fido2-device=auto" ];
       };
     };
-    plymouth = {
-      enable = false;
-    };
-    consoleLogLevel = 3;
-    kernelParams = [ "quiet" "splash" ];
+    # plymouth = {
+    #   enable = false;
+    # };
+    # consoleLogLevel = 3;
+    # kernelParams = [ "quiet" "splash" ];
   };
 
   zramSwap.enable = true;
+
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
+    };
+    optimise = {
+      automatic = true;
+    };
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+    };
+  };
 
 
 
   networking.hostName = "zennix";
   networking.networkmanager.enable = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   time.timeZone = "America/Chicago";
 
@@ -77,7 +93,17 @@
 
   nixpkgs.config.allowUnfree = true;
 
+    environment.systemPackages = [
+    pkgs.asusctl
+  ];
+
+  services.asusd.enable = true;
+
   services.udisks2.enable = true;
+  # services.tlp.pd.enable = true;
+  # services.power-profiles-daemon = {
+  #   enable = true;
+  # };
   documentation.man.man-db.enable = true;
 
   system.stateVersion = "26.05";

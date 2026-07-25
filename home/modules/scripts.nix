@@ -239,6 +239,21 @@
   done
   '')
 
+  (pkgs.writeShellScriptBin "nixgen" ''
+    nixos-rebuild list-generations
+  '')
 
+  (pkgs.writeShellScriptBin "nixswitch" ''
+    set -euo pipefail
+    if [ -z "''${1:-}" ]; then
+      echo "usage: nixgen <generation-number>" >&2
+      exit 1
+    fi
+    sudo /nix/var/nix/profiles/system-$1-link/bin/switch-to-configuration switch
+  '')
+
+  (pkgs.writeShellScriptBin "nixback" ''
+    sudo nixos-rebuild switch --rollback
+  '')
   ];
 }

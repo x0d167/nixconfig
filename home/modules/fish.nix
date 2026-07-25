@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   programs.fish = {
     enable = true;
@@ -201,7 +201,7 @@
 	  enable = true;
 	  enableFishIntegration = true;
 	  presets = [ "nerd-font-symbols" ];
-	  configPath = "$HOME/.config/starship/starship.toml";
+	  configPath = "${config.home.homeDirectory}/.config/starship/starship.toml";
 	  # settings = {};
   };
 }

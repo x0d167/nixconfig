@@ -73,8 +73,9 @@
     lowfi
 
     # ── System / hardware ──
-    tlp
-    tlp-pd
+    # tlp
+    # tlp-pd
+    # power-profiles-daemon
     libnotify
     openssl
     coreutils
