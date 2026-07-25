@@ -59,6 +59,20 @@ hl.monitor({
 	scale = 1,
 })
 
+hl.monitor({
+	output = "desc:California Institute of Technology 0x1405",
+	mode = "preferred",
+	position = "auto-down",
+	scale = 2,
+})
+
+hl.monitor({
+	output = "desc:Chimei Innolux Corporation 0x14D5",
+	mode = "preferred",
+	position = "auto-down",
+	scale = 1,
+})
+
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------

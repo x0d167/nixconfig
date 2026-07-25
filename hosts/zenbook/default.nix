@@ -8,6 +8,7 @@
     ../../modules/common/browser.nix
     ../../modules/common/gpg-card.nix
     ../../modules/common/hyprland.nix
+    ../../modules/common/noctalia.nix
     ../../modules/common/packages.nix
     ../../modules/common/shell.nix
     ../../modules/common/virtualization.nix
