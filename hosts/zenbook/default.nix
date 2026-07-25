@@ -1,29 +1,17 @@
-{ config, pkgs, username, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/common/audio.nix
-    ../../modules/common/bluetooth.nix
-    ../../modules/common/browser.nix
-    ../../modules/common/gpg-card.nix
-    ../../modules/common/hyprland.nix
-    ../../modules/common/noctalia.nix
-    ../../modules/common/packages.nix
-    ../../modules/common/shell.nix
-    ../../modules/common/virtualization.nix
-    ../../modules/common/yubikey.nix
-    ../../modules/common/zsa-keyboard.nix
-    ../../modules/common/security.nix
-    ../../modules/common/syncthing.nix
-    ../../modules/common/tailscale.nix
+    ../../modules/hardware/asus.nix
+    ../../profiles/laptop.nix
   ];
 
   boot = {
     loader = {
       systemd-boot = {
         enable = true;
-	configurationLimit = 5;
+        configurationLimit = 5;
       };
       efi.canTouchEfiVariables = true;
     };
@@ -32,79 +20,12 @@
       systemd.enable = true;
       luks.devices."luks-0e6bb8a1-6546-4f60-966f-b928b78ffdfc" = {
         device = "/dev/disk/by-uuid/0e6bb8a1-6546-4f60-966f-b928b78ffdfc";
-	crypttabExtraOpts = [ "fido2-device=auto" ];
+        crypttabExtraOpts = [ "fido2-device=auto" ];
       };
     };
-    # plymouth = {
-    #   enable = false;
-    # };
-    # consoleLogLevel = 3;
-    # kernelParams = [ "quiet" "splash" ];
   };
-
-  zramSwap.enable = true;
-
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 14d";
-    };
-    optimise = {
-      automatic = true;
-    };
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-    };
-  };
-
-
 
   networking.hostName = "zennix";
-  networking.networkmanager.enable = true;
-
-
-  time.timeZone = "America/Chicago";
-
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  users.users.${username} = {
-    isNormalUser = true;
-    description = username;
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
-  };
-
-  nixpkgs.config.allowUnfree = true;
-
-    environment.systemPackages = [
-    pkgs.asusctl
-  ];
-
-  services.asusd.enable = true;
-
-  services.udisks2.enable = true;
-  # services.tlp.pd.enable = true;
-  # services.power-profiles-daemon = {
-  #   enable = true;
-  # };
-  documentation.man.man-db.enable = true;
 
   system.stateVersion = "26.05";
 }

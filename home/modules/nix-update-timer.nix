@@ -1,4 +1,4 @@
-{ pkgs, ...}:
+{ pkgs, ... }:
 
 {
   systemd.user.services.flake-update = {
@@ -9,12 +9,12 @@
       ExecStart = "${pkgs.nix}/bin/nix flake update";
     };
   };
-  
+
   systemd.user.timers.flake-update = {
     Unit.Description = "Weekly nix flake update timer";
     Timer = {
-      OnCalendar = "weekly";
-      Persistent = true;  # catches up if machine was off
+      OnCalendar = "Sat *-*-* 10:00:00"; # every Saturday at 10am
+      Persistent = true; # catches up if machine was off
     };
     Install.WantedBy = [ "timers.target" ];
   };

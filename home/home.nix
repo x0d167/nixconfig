@@ -1,17 +1,18 @@
 { username, ... }:
 
 {
-  imports = [ 
+  imports = [
     ./modules/bash.nix
     ./modules/fish.nix
-    ./modules/git.nix 
-    ./modules/hyprland.nix 
-    ./modules/kitty.nix 
-    ./modules/packages.nix 
-    ./modules/scripts.nix 
-    ./modules/ssh.nix 
-    ./modules/nix-update-timer.nix 
+    ./modules/git.nix
+    ./modules/hyprland.nix
+    ./modules/kitty.nix
+    ./modules/nix-update-timer.nix
+    ./modules/packages.nix
+    ./modules/scripts.nix
+    ./modules/ssh.nix
     ./modules/vicinae.nix
+    ./modules/vim.nix
     ./modules/xdg.nix
   ];
 

@@ -42,6 +42,7 @@
     shellcheck
     shfmt
     treefmt
+    gcc
 
     # ── bat ecosystem ──
     bat
