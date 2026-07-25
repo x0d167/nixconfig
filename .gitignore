@@ -1,0 +1,30 @@
+# Nix build results
+result
+result-*
+
+# Flake evaluation cache
+.direnv/
+.envrc.local
+
+# Editor/IDE cruft
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets — never commit these
+*.pem
+*.key
+secrets.yaml
+secrets.json
+*-password
+*-password.txt
+
+# Home-manager backup files (from backupFileExtension = "hm-bak")
+*.hm-bak
+
+# Local overrides / scratch
+*.local.nix
+scratch/
+TODO.local.md
