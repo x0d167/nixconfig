@@ -1,7 +1,7 @@
 {
   zennix = {
     tailscaleHost = "zennix.bonobo-egret.ts.net";
-    syncthingId = "JIXKY55-HERMP7O-JVYPMRN-BX5M5VK-GZAT4GE-2N5YHJI-YI6T6W4-U5GS2AT";
+    syncthingId = "WX5JEMF-J7N76EA-LQVUZKI-S5V3OFY-LMPLF52-KJFB2D6-BKWC5MN-3WJWZAH";
   };
   proxmox = {
     tailscaleHost = "syncthing.bonobo-egret.ts.net";
@@ -16,5 +16,3 @@
     syncthingId = "IEONA4E-QG4RIHD-53IJXRV-TOAZRY2-DJHYZLG-7CMJIN7-T2O4PTX-56VZ2AS";
   };
 }
-
-

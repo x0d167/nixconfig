@@ -1,14 +1,18 @@
-{ config, username, ... }:
+{
+  config,
+  username,
+  ...
+}:
 let
   peers = import ./peers.nix;
-  otherDevices = builtins.removeAttrs peers [ config.networking.hostName ];
+  otherDevices = removeAttrs peers [ config.networking.hostName ];
 in
 {
   services.syncthing = {
     enable = true;
     user = username;
     group = "users";
-    guiAddress = "0.0.0.0:8384";
+    guiAddress = "localhost:8384";
     guiPasswordFile = "/etc/syncthing-gui-password";
     overrideDevices = true;
     overrideFolders = true;
