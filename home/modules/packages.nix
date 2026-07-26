@@ -3,14 +3,14 @@
   home.packages = with pkgs; [
     # LSP servers
     bash-language-server
-    clang-tools          # clangd
+    clang-tools # clangd
     haskell-language-server
-    vscode-langservers-extracted  # jsonls
+    vscode-langservers-extracted # jsonls
     lua-language-server
     nixd
     ruff
     rust-analyzer
-    stylua               # also doubles as formatter
+    stylua # also doubles as formatter
     texlab
     tinymist
     zls
@@ -20,5 +20,14 @@
     shellcheck
     taplo
     rustfmt
+
+    devenv
   ];
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableFishIntegration = true;
+    enableBashIntegration = true;
+  };
 }

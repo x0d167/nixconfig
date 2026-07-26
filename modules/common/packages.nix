@@ -29,6 +29,7 @@
     stow
     eza
     imagemagick
+    nh
 
     # ── Editor / LSP / formatting support ──
     neovim

@@ -22,24 +22,47 @@
     };
 
     noctalia = {
-    url = "github:noctalia-dev/noctalia/cachix";
+      url = "github:noctalia-dev/noctalia/cachix";
     };
   };
 
   nixConfig = {
-  extra-substituters = [ "https://vicinae.cachix.org" "https://noctalia.cachix.org" ];
-  extra-trusted-public-keys = [
-    "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
-    "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+    extra-substituters = [
+      "https://vicinae.cachix.org"
+      "https://noctalia.cachix.org"
+      "https://devenv.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw"
     ];
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
     let
-      mkHost = { hostname, username, system ? "x86_64-linux" }:
+      mkHost =
+        {
+          hostname,
+          username,
+          system ? "x86_64-linux",
+        }:
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit username hostname self inputs; };
+          specialArgs = {
+            inherit
+              username
+              hostname
+              self
+              inputs
+              ;
+          };
           modules = [
             ./hosts/${hostname}
             home-manager.nixosModules.home-manager
@@ -55,7 +78,10 @@
     in
     {
       nixosConfigurations = {
-        zenbook = mkHost { hostname = "zenbook"; username = "grip"; };
+        zenbook = mkHost {
+          hostname = "zenbook";
+          username = "grip";
+        };
       };
     };
 }

@@ -2,40 +2,39 @@
 {
   home.packages = [
     (pkgs.writeShellScriptBin "lehgit" ''
-	  timestamp=$(date '+%Y-%m-%d %H:%M')
-	  messages=(
-	      "ugh, I'm probably just tweaking some annoying thing I missed before pushing the last time."
-	      "why is this always the last thing I see after pushing 😭"
-	      "tiny fix that shouldn't exist, but here we are."
-	      "did I push too early? yes. am I fixing it now? also yes."
-	      "fixing that one thing I swore was fine 10 minutes ago."
-	      "the commit of shame. [$timestamp]"
-	      "past me was too confident. again."
-	      "you didn't see this commit, okay?"
-	      "nothing to see here... just a tiny mistake with big dreams."
-	      "guess what? I forgot something. [$timestamp]"
-	      "in my defense, it worked on my machine. eventually."
-	      "correcting a typo that definitely wasn't load-bearing... probably."
-	      "squashing a bug I introduced approximately 4 minutes ago."
-	      "this commit message is longer than the actual fix."
-	      "reader, I did not test this before the last push."
-	  )
-	  random_index=$((RANDOM % ''${#messages[@]}))
-	  random_msg="''${messages[$random_index]} [$timestamp]"
-	  if [[ $# -eq 0 ]]; then
-	      git add . && git commit -m "$random_msg"
-	  elif [[ $# -eq 1 ]]; then
-	      git add . && git commit -m "$1"
-	  else
-	      msg="''${*: -1}"
-	      files=("''${@:1:$#-1}")
-	      git add "''${files[@]}"
-	      git commit -m "$msg"
-	  fi
-	  branch=$(git rev-parse --abbrev-ref HEAD)
-	  git push -u origin "$branch"
-  '')
-
+      	  timestamp=$(date '+%Y-%m-%d %H:%M')
+      	  messages=(
+      	      "ugh, I'm probably just tweaking some annoying thing I missed before pushing the last time."
+      	      "why is this always the last thing I see after pushing 😭"
+      	      "tiny fix that shouldn't exist, but here we are."
+      	      "did I push too early? yes. am I fixing it now? also yes."
+      	      "fixing that one thing I swore was fine 10 minutes ago."
+      	      "the commit of shame. [$timestamp]"
+      	      "past me was too confident. again."
+      	      "you didn't see this commit, okay?"
+      	      "nothing to see here... just a tiny mistake with big dreams."
+      	      "guess what? I forgot something. [$timestamp]"
+      	      "in my defense, it worked on my machine. eventually."
+      	      "correcting a typo that definitely wasn't load-bearing... probably."
+      	      "squashing a bug I introduced approximately 4 minutes ago."
+      	      "this commit message is longer than the actual fix."
+      	      "reader, I did not test this before the last push."
+      	  )
+      	  random_index=$((RANDOM % ''${#messages[@]}))
+      	  random_msg="''${messages[$random_index]} [$timestamp]"
+      	  if [[ $# -eq 0 ]]; then
+      	      git add . && git commit -m "$random_msg"
+      	  elif [[ $# -eq 1 ]]; then
+      	      git add . && git commit -m "$1"
+      	  else
+      	      msg="''${*: -1}"
+      	      files=("''${@:1:$#-1}")
+      	      git add "''${files[@]}"
+      	      git commit -m "$msg"
+      	  fi
+      	  branch=$(git rev-parse --abbrev-ref HEAD)
+      	  git push -u origin "$branch"
+    '')
 
     (pkgs.writeShellScriptBin "pilfer" ''
       pilfer_type="$1"
@@ -199,61 +198,81 @@
     '')
 
     (pkgs.writeShellScriptBin "webapp-remove" ''
-  ICON_DIR="$HOME/.local/share/applications/icons"
-  DESKTOP_DIR="$HOME/.local/share/applications/"
-  if [ "$#" -eq 0 ]; then
-    declare -A APP_MAP
-    while IFS= read -r -d ''' file; do
-      if grep -q '^Exec=.*\(webapp-launch\|webapp-handler\).*' "$file"; then
-        safe_name=$(basename "''${file%.desktop}")
-        display_name=$(sed -n 's/^Name=//p' "$file")
-        APP_MAP["$display_name"]="$safe_name"
+      ICON_DIR="$HOME/.local/share/applications/icons"
+      DESKTOP_DIR="$HOME/.local/share/applications/"
+      if [ "$#" -eq 0 ]; then
+        declare -A APP_MAP
+        while IFS= read -r -d ''' file; do
+          if grep -q '^Exec=.*\(webapp-launch\|webapp-handler\).*' "$file"; then
+            safe_name=$(basename "''${file%.desktop}")
+            display_name=$(sed -n 's/^Name=//p' "$file")
+            APP_MAP["$display_name"]="$safe_name"
+          fi
+        done < <(find "$DESKTOP_DIR" -name '*.desktop' -print0)
+        if ((''${#APP_MAP[@]})); then
+          SELECTION=$(printf '%s\n' "''${!APP_MAP[@]}" | sort | gum choose --no-limit --header "Select web app to remove..." --selected-prefix="✗ ")
+          APP_NAMES=()
+          while IFS= read -r display; do
+            [[ -n "$display" ]] && APP_NAMES+=("''${APP_MAP[$display]}")
+          done <<< "$SELECTION"
+        else
+          echo "No web apps to remove."
+          exit 1
+        fi
+      else
+        APP_NAMES=("$@")
       fi
-    done < <(find "$DESKTOP_DIR" -name '*.desktop' -print0)
-    if ((''${#APP_MAP[@]})); then
-      SELECTION=$(printf '%s\n' "''${!APP_MAP[@]}" | sort | gum choose --no-limit --header "Select web app to remove..." --selected-prefix="✗ ")
-      APP_NAMES=()
-      while IFS= read -r display; do
-        [[ -n "$display" ]] && APP_NAMES+=("''${APP_MAP[$display]}")
-      done <<< "$SELECTION"
-    else
-      echo "No web apps to remove."
-      exit 1
-    fi
-  else
-    APP_NAMES=("$@")
-  fi
-  if [[ ''${#APP_NAMES[@]} -eq 0 ]]; then
-    echo "You must select at least one web app to remove."
-    exit 1
-  fi
-  for APP_NAME in "''${APP_NAMES[@]}"; do
-    if [[ -f "$DESKTOP_DIR/$APP_NAME.desktop" ]]; then
-      rm -f "$DESKTOP_DIR/$APP_NAME.desktop"
-      echo "Removed Desktop entry: $APP_NAME"
-    fi
-    if [[ -f "$ICON_DIR/$APP_NAME.png" ]]; then
-      rm -f "$ICON_DIR/$APP_NAME.png"
-      echo "Removed Icon: $APP_NAME"
-    fi
-  done
-  '')
+      if [[ ''${#APP_NAMES[@]} -eq 0 ]]; then
+        echo "You must select at least one web app to remove."
+        exit 1
+      fi
+      for APP_NAME in "''${APP_NAMES[@]}"; do
+        if [[ -f "$DESKTOP_DIR/$APP_NAME.desktop" ]]; then
+          rm -f "$DESKTOP_DIR/$APP_NAME.desktop"
+          echo "Removed Desktop entry: $APP_NAME"
+        fi
+        if [[ -f "$ICON_DIR/$APP_NAME.png" ]]; then
+          rm -f "$ICON_DIR/$APP_NAME.png"
+          echo "Removed Icon: $APP_NAME"
+        fi
+      done
+    '')
 
-  (pkgs.writeShellScriptBin "nixgen" ''
-    nixos-rebuild list-generations
-  '')
+    (pkgs.writeShellScriptBin "nixgen" ''
+      nixos-rebuild list-generations
+    '')
 
-  (pkgs.writeShellScriptBin "nixswitch" ''
-    set -euo pipefail
-    if [ -z "''${1:-}" ]; then
-      echo "usage: nixgen <generation-number>" >&2
-      exit 1
-    fi
-    sudo /nix/var/nix/profiles/system-$1-link/bin/switch-to-configuration switch
-  '')
+    (pkgs.writeShellScriptBin "nixswitch" ''
+      set -euo pipefail
+      if [ -z "''${1:-}" ]; then
+        echo "usage: nixgen <generation-number>" >&2
+        exit 1
+      fi
+      sudo /nix/var/nix/profiles/system-$1-link/bin/switch-to-configuration switch
+    '')
 
-  (pkgs.writeShellScriptBin "nixback" ''
-    sudo nixos-rebuild switch --rollback
-  '')
+    (pkgs.writeShellScriptBin "nixback" ''
+      sudo nixos-rebuild switch --rollback
+    '')
+    (pkgs.writeShellScriptBin "devenv-new" ''
+      set -euo pipefail
+      TEMPLATE_DIR="$HOME/.config/devenv-templates"
+      if [ "$#" -ne 1 ]; then
+          echo "usage: devenv-new <language>"
+          echo "available templates:"
+          ls "$TEMPLATE_DIR"
+          exit 1
+      fi
+      LANG="$1"
+      SRC="$TEMPLATE_DIR/$LANG"
+      if [ ! -d "$SRC" ]; then
+          echo "no template for '$LANG'. available:"
+          ls "$TEMPLATE_DIR"
+          exit 1
+      fi
+      cp -r "$SRC"/. .
+      direnv allow .
+      echo "devenv template '$LANG' applied. run 'devenv shell' or just cd back in."
+    '')
   ];
 }

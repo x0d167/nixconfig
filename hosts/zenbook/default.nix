@@ -25,6 +25,10 @@
     };
   };
 
+  environment.sessionVariables = {
+    NH_FLAKE = "/home/grip/.config/nixconfig";
+  };
+
   networking.hostName = "zennix";
 
   system.stateVersion = "26.05";
