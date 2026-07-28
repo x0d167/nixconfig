@@ -268,10 +268,19 @@ hl.window_rule({
 	tag = "+floating-window",
 })
 
--- winboat, freerdp
+-- Noctalia Panels
 hl.window_rule({
-	match = { class = "^(winboat|xfreerdp)$" },
-	workspace = "5",
+	match = { class = "^dev\\.noctalia\\.Noctalia$" },
+	float = true,
+	fullscreen = false,
+	max_size = { 1680, 1050 },
+})
+
+-- Thunderbird
+hl.window_rule({
+	match = { class = "^org\\.mozilla\\.thunderbird_esr$", title = "^Write" },
+	float = true,
+	fullscreen = false,
 })
 
 -- 1Password
@@ -750,7 +759,11 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { description = "Session menu" })
 hl.bind("CTRL + ALT + L", hl.dsp.exec_cmd("noctalia msg session lock"), { description = "Lock screen" })
 hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), { description = "Launcher toggle" })
-hl.bind(mod .. " + ALT + W", hl.dsp.exec_cmd("noctalia msg panel-toggle wallpaper"), { description = "Wallpaper selector" })
+hl.bind(
+	mod .. " + ALT + W",
+	hl.dsp.exec_cmd("noctalia msg panel-toggle wallpaper"),
+	{ description = "Wallpaper selector" }
+)
 hl.bind(
 	mod .. " + ALT + S",
 	hl.dsp.exec_cmd("noctalia msg settings-toggle"),
@@ -783,4 +796,3 @@ hl.bind(
 	hl.dsp.exec_cmd(term .. " --class floating-update -e update"),
 	{ description = "System update" }
 )
-
