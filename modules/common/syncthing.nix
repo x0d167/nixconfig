@@ -16,12 +16,11 @@
     wants = [ "graphical-session.target" ];
     wantedBy = [ "default.target" ];
     serviceConfig = {
-      ExecStart = "${pkgs.syncthingtray}/bin/syncthingtray --wait";
+      ExecStart = "${pkgs.syncthingtray-minimal}/bin/syncthingtray --wait";
       Restart = "on-failure";
       RestartSec = 1;
       Type = "simple";
     };
   };
 
-  environment.systemPackages = [ pkgs.syncthingtray-minimal ];
 }
