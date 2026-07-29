@@ -107,8 +107,6 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 20")
 	hl.exec_cmd("wl-paste --watch cliphist store")
 	hl.exec_cmd("vicinae server")
-	hl.exec_cmd("syncthingtray --wait")
-	hl.exec_cmd("/usr/sbin/pypr")
 end)
 
 -----------------------
@@ -553,14 +551,6 @@ hl.layer_rule({
 	ignore_alpha = 0,
 })
 
--- pypr expose
-hl.workspace_rule({
-	workspace = "special:scratchpad",
-	gaps_out = 60,
-	gaps_in = 30,
-	border_size = 5,
-})
-
 -- Virt-Manager -> workspace 3
 hl.window_rule({
 	match = { class = "^virt-manager$" },
@@ -884,13 +874,13 @@ hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("noctalia msg screenshot-region")
 ---- PYPR SCRATCHPADS -----
 ---------------------------
 
-hl.bind(mod .. " + ALT + B", hl.dsp.exec_cmd("pypr toggle btop"), { description = "Toggle btop scratchpad" })
--- hl.bind(mod .. " + ALT + C", hl.dsp.exec_cmd("pypr toggle signal"), { description = "Toggle Signal scratchpad" })
-hl.bind(
-	mod .. " + CTRL + R",
-	hl.dsp.exec_cmd("hyprctl reload && pypr reload"),
-	{ description = "Reload Hyprland + pypr" }
-)
+-- hl.bind(mod .. " + ALT + B", hl.dsp.exec_cmd("pypr toggle btop"), { description = "Toggle btop scratchpad" })
+-- -- hl.bind(mod .. " + ALT + C", hl.dsp.exec_cmd("pypr toggle signal"), { description = "Toggle Signal scratchpad" })
+-- hl.bind(
+-- 	mod .. " + CTRL + R",
+-- 	hl.dsp.exec_cmd("hyprctl reload && pypr reload"),
+-- 	{ description = "Reload Hyprland + pypr" }
+-- )
 
 ---------------------------
 ---- APP SHORTCUTS --------
