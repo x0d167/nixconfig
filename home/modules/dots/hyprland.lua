@@ -261,19 +261,35 @@ hl.window_rule({
 	rounding = 10,
 })
 
--- Bitwarden
-hl.window_rule({
-	match = { class = "^Bitwarden$" },
-	no_screen_share = true,
-	tag = "+floating-window",
-})
+-- Float Bitwarden extension popups in Zen / Firefox
+hl.on("window.title", function(win)
+	if not win or not win.title then
+		return
+	end
+
+	-- Check if the title belongs to Bitwarden or any extension popup
+	if win.title:find("Extension: %(Bitwarden") or win.title:find("Bitwarden Password Manager") then
+		-- Only attempt if the window isn't floating already
+		if not win.floating then
+			-- 1. Enable floating explicitly
+			hl.dispatch(hl.dsp.window.float({ action = "enable", window = win }))
+
+			-- 2. Resize to popup dimensions (e.g., 500x600)
+			hl.dispatch(hl.dsp.window.resize({ x = 500, y = 600, relative = false, window = win }))
+
+			-- 3. Center the extension popup on your screen
+			hl.dispatch(hl.dsp.window.center({ window = win }))
+		end
+	end
+end)
 
 -- Noctalia Panels
 hl.window_rule({
 	match = { class = "^dev\\.noctalia\\.Noctalia$" },
 	float = true,
 	fullscreen = false,
-	max_size = { 1680, 1050 },
+	size = { 750, 950 },
+	max_size = { 1920, 1080 },
 })
 
 -- Thunderbird
@@ -558,9 +574,9 @@ hl.workspace_rule({
 	layout = "monocle",
 })
 
--- Workspace 3 bind to scrolling layout
+-- Workspace 2 & 3 bind to scrolling layout
 hl.workspace_rule({
-	workspace = "3",
+	workspace = "r[2-3]",
 	layout = "scrolling",
 })
 
@@ -573,7 +589,8 @@ hl.workspace_rule({
 local mod = "SUPER"
 local term = "kitty"
 local browser = "zen"
-local files = "nautilus"
+local files = "dolphin"
+local scripts = "~/.local/scripts/"
 
 -----------------------
 ---- APPLICATIONS -----
@@ -581,24 +598,50 @@ local files = "nautilus"
 
 hl.bind(mod .. " + T", hl.dsp.exec_cmd(term), { description = "Launch terminal" })
 hl.bind(mod .. " + B", hl.dsp.exec_cmd(browser), { description = "Launch browser" })
--- hl.bind(
--- 	mod .. " + Space",
--- 	hl.dsp.exec_cmd("pkill rofi || rofi -show drun -replace -i"),
--- 	{ description = "Toggle application launcher" }
--- )
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("pkill " .. files .. " || " .. files), { description = "Toggle file explorer" })
 
 -----------------------
 ---- WINDOW MGMT ------
 -----------------------
 
-hl.bind(mod .. " + Q", hl.dsp.window.kill(activewindow), { description = "Kill active window" })
-hl.bind(mod .. " + W", hl.dsp.window.close(activewindow), { description = "Close active window" })
+hl.bind(mod .. " + Q", hl.dsp.window.kill(), { description = "kill active window" })
+hl.bind(mod .. " + W", hl.dsp.window.close(), { description = "close active window" })
 hl.bind("CTRL + ALT + F", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Toggle fullscreen" })
-hl.bind(mod .. " + V", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle floating" })
--- hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd(toggleallfloat), { description = "Toggle all floating" })
 hl.bind(mod .. " + P", hl.dsp.window.pseudo({ action = "toggle" }), { description = "Pseudo-tile window" })
 hl.bind(mod .. " + backslash", hl.dsp.layout("togglesplit"), { description = "Toggle split direction" }) -- verify: not in wiki, may be hl.dsp.layout("togglesplit")
+
+hl.bind(mod .. " + V", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle floating" })
+
+-- Toggle all mapped windows on current workspace between float and tiled
+hl.bind(mod .. " + SHIFT + V", function()
+	local current_ws = hl.get_active_workspace().id
+	local ws_windows = {}
+	local any_tiled = false
+
+	-- Collect windows on current workspace
+	for _, win in ipairs(hl.get_windows()) do
+		if win.workspace.id == current_ws and win.mapped then
+			table.insert(ws_windows, win)
+			-- Check if at least one window is currently tiled
+			if not win.floating then
+				any_tiled = true
+			end
+		end
+	end
+
+	-- If there's at least one tiled window, float EVERYTHING.
+	-- Otherwise, unfloat EVERYTHING to restore tiled layout.
+	local target_floating = any_tiled
+
+	for _, win in ipairs(ws_windows) do
+		if win.floating ~= target_floating then
+			hl.dispatch(hl.dsp.window.float({
+				action = target_floating and "enable" or "disable",
+				window = win,
+			}))
+		end
+	end
+end, { description = "Toggle workspace floating state" })
 
 -- Focus windows
 hl.bind(mod .. " + H", hl.dsp.focus({ direction = "l" }), { description = "Focus left" })
@@ -626,22 +669,71 @@ hl.bind("ALT + ESCAPE", function()
 	hl.dispatch(hl.dsp.window.alter_zorder({ mode = "top" }))
 end, { repeating = true })
 
-hl.bind(
-	mod .. " + F",
-	hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),
-	{ description = "Maximize window" }
-)
-hl.bind(
-	mod .. " + SHIFT + F",
-	hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }),
-	{ description = "Fullscreen window" }
-)
+--------------------------------------------------------------------------------
+-- Dynamic Binds
+--------------------------------------------------------------------------------
 
------------------------
----- RESIZE MODE ------
------------------------
+-- Helper function to detect the active workspace's layout
+local function get_current_layout()
+	local ws = hl.get_active_workspace()
+	if ws and ws.tiled_layout and ws.tiled_layout ~= "" then
+		return ws.tiled_layout
+	end
+	return hl.get_config("general.layout")
+end
 
-hl.bind(mod .. " + R", hl.dsp.submap("resize"), { description = "Enter resize mode" })
+-- MOD + F
+-- Scrolling layout -> Maximize column
+-- Other layouts    -> Toggle maximized window
+hl.bind(mod .. " + F", function()
+	if get_current_layout() == "scrolling" then
+		hl.dispatch(hl.dsp.layout("fit active"))
+	else
+		hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
+	end
+end, { description = "Maximize mode Scrolling/Other" })
+
+-- MOD + SHIFT + F
+-- Scrolling layout -> Fit visible
+-- Other layouts    -> Toggle true fullscreen
+hl.bind(mod .. " + SHIFT + F", function()
+	if get_current_layout() == "scrolling" then
+		hl.dispatch(hl.dsp.layout("fit expand"))
+	else
+		hl.dispatch(hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
+	end
+end, { description = "Fit visible (scrolling) / Fullscreen (other)" })
+
+-- MOD + ALT + F
+-- Scrolling layout -> Fit all
+hl.bind(mod .. " + ALT + F", function()
+	if get_current_layout() == "scrolling" then
+		hl.dispatch(hl.dsp.layout("fit all"))
+	end
+end, { description = "Fit all (scrolling)" })
+
+-- MOD + R
+-- Scrolling layout -> Enter colresize submap
+-- Other layouts    -> Enter resize submap
+hl.bind(mod .. " + R", function()
+	if get_current_layout() == "scrolling" then
+		hl.dispatch(hl.dsp.submap("colresize"))
+	else
+		hl.dispatch(hl.dsp.submap("resize"))
+	end
+end, { description = "Enter layout resize mode" })
+
+--------------------------------------------------------------------------------
+-- Submap Definitions
+--------------------------------------------------------------------------------
+
+hl.define_submap("colresize", function()
+	hl.bind("L", hl.dsp.layout("colresize +conf"), { description = "Next explicit column width" })
+	hl.bind("right", hl.dsp.layout("colresize +conf"))
+	hl.bind("H", hl.dsp.layout("colresize -conf"), { description = "Prev explicit column width" })
+	hl.bind("left", hl.dsp.layout("colresize -conf"))
+	hl.bind("Escape", hl.dsp.submap("reset"), { description = "Exit colresize mode" })
+end)
 
 hl.define_submap("resize", function()
 	hl.bind("H", hl.dsp.window.resize({ x = -100, y = 0, relative = true }), { description = "Resize left" })
@@ -721,8 +813,6 @@ hl.bind(mod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 ---- SYSTEM CONTROL ---
 -----------------------
 
--- hl.bind("CTRL + ALT + L",      hl.dsp.exec_cmd("hyprlock"),  { description = "Lock screen" })
--- hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("wlogout"),   { description = "Power menu" })
 hl.bind(mod .. " + CTRL + R", hl.dsp.exec_cmd("hyprctl reload"), { description = "Reload Hyprland" })
 
 -----------------------
@@ -752,15 +842,22 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
-------------------------------
----- EXTERNAL COMMANDS -------
-------------------------------
+---------------------------
+---- SHELL KEYBINDINGS ----
+---------------------------
+-- Noctalia specific keybinds
+-- Custom scripts and application shortcuts
+
+---------------------------
+---- SHELL COMMANDS -------
+---------------------------
 
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { description = "Session menu" })
 hl.bind("CTRL + ALT + L", hl.dsp.exec_cmd("noctalia msg session lock"), { description = "Lock screen" })
 hl.bind(mod .. " + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), { description = "Launcher toggle" })
+
 hl.bind(
-	mod .. " + ALT + W",
+	mod .. " + SHIFT + W",
 	hl.dsp.exec_cmd("noctalia msg panel-toggle wallpaper"),
 	{ description = "Wallpaper selector" }
 )
@@ -769,11 +866,18 @@ hl.bind(
 	hl.dsp.exec_cmd("noctalia msg settings-toggle"),
 	{ description = "Toggle noctalia system settings" }
 )
+hl.bind(
+	"ALT + TAB",
+	hl.dsp.exec_cmd("noctalia msg window-switcher"),
+	{ description = "Classic Window Switcher Alt+Tab" }
+)
+
+---------------------------
+---- CUSTOM SCRIPTS -------
+---------------------------
 
 hl.bind("Print", hl.dsp.exec_cmd("noctalia msg screenshot-region"), { description = "Screenshot" })
 hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("noctalia msg screenshot-region"), { description = "Screenshot" })
-
-hl.bind("ALT + Space", hl.dsp.exec_cmd("vicinae toggle"), { description = "Vicinae Launcher toggle" })
 
 ---------------------------
 ---- PYPR SCRATCHPADS -----
@@ -796,3 +900,5 @@ hl.bind(
 	hl.dsp.exec_cmd(term .. " --class floating-update -e update"),
 	{ description = "System update" }
 )
+
+hl.bind("ALT + Space", hl.dsp.exec_cmd("vicinae toggle"), { description = "Toggle Vicinae Launcher" })
