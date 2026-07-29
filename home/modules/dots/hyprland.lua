@@ -107,7 +107,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 20")
 	hl.exec_cmd("wl-paste --watch cliphist store")
 	hl.exec_cmd("vicinae server")
-	hl.exec_cmd("syncthingtray")
+	hl.exec_cmd("syncthingtray --wait")
 	hl.exec_cmd("/usr/sbin/pypr")
 end)
 
