@@ -67,12 +67,14 @@
     pavucontrol
     pamixer
     cava
-    nautilus
     libreoffice
     mimeo
     qt6.qtwayland
     qt6Packages.qt6ct
     lowfi
+    obsidian
+    kdePackages.dolphin
+    kdePackages.dolphin-plugins
 
     # ── System / hardware ──
     # tlp
