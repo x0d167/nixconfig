@@ -78,8 +78,8 @@
     in
     {
       nixosConfigurations = {
-        zenbook = mkHost {
-          hostname = "zenbook";
+        zennix = mkHost {
+          hostname = "zennix";
           username = "grip";
         };
       };

@@ -254,25 +254,16 @@
     (pkgs.writeShellScriptBin "nixback" ''
       sudo nixos-rebuild switch --rollback
     '')
-    (pkgs.writeShellScriptBin "devenv-new" ''
-      set -euo pipefail
-      TEMPLATE_DIR="$HOME/.config/devenv-templates"
-      if [ "$#" -ne 1 ]; then
-          echo "usage: devenv-new <language>"
-          echo "available templates:"
-          ls "$TEMPLATE_DIR"
-          exit 1
-      fi
-      LANG="$1"
-      SRC="$TEMPLATE_DIR/$LANG"
-      if [ ! -d "$SRC" ]; then
-          echo "no template for '$LANG'. available:"
-          ls "$TEMPLATE_DIR"
-          exit 1
-      fi
-      cp -r "$SRC"/. .
-      direnv allow .
-      echo "devenv template '$LANG' applied. run 'devenv shell' or just cd back in."
+    (pkgs.writeShellScriptBin "nos" ''
+      sudo nixos-rebuild switch --flake ~/.config/nixconfig#$(hostname)
+    '')
+
+    (pkgs.writeShellScriptBin "nob" ''
+      sudo nixos-rebuild build --flake ~/.config/nixconfig#$(hostname)
+    '')
+
+    (pkgs.writeShellScriptBin "nixconfig" ''
+      cd ~/.config/nixconfig
     '')
   ];
 }

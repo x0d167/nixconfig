@@ -12,6 +12,7 @@
 
       gs = "git status";
       ga = "git add";
+      gpom = "git push origin main";
 
       grep = "grep --color=auto";
       yz = "yazi";
@@ -146,47 +147,47 @@
       '';
 
       __done_started = {
-      	body = ''
-	  set -g __done_initial_window_id (hyprctl -j activewindow 2>/dev/null | jq -r '.address // empty' 2>/dev/null)
-	  '';
-	  onEvent = "fish_preexec";
+        body = ''
+          	  set -g __done_initial_window_id (hyprctl -j activewindow 2>/dev/null | jq -r '.address // empty' 2>/dev/null)
+          	  '';
+        onEvent = "fish_preexec";
       };
 
       __done_ended = {
-	  body = ''
-	    set -l exit_status $status
-	    set -l dur $CMD_DURATION
-	    test -z "$dur"; and return
-	    test "$dur" -le 5000; and return
+        body = ''
+          	    set -l exit_status $status
+          	    set -l dur $CMD_DURATION
+          	    test -z "$dur"; and return
+          	    test "$dur" -le 5000; and return
 
-	    set -l current_window (hyprctl -j activewindow 2>/dev/null | jq -r '.address // empty' 2>/dev/null)
-	    test "$__done_initial_window_id" = "$current_window"; and return
-	    string match -qr -- '^git (?!push|pull|fetch)' "$argv[1]"; and return
+          	    set -l current_window (hyprctl -j activewindow 2>/dev/null | jq -r '.address // empty' 2>/dev/null)
+          	    test "$__done_initial_window_id" = "$current_window"; and return
+          	    string match -qr -- '^git (?!push|pull|fetch)' "$argv[1]"; and return
 
-	    set -l total_s (math --scale=0 "$dur/1000")
-	    set -l s (math "$total_s % 60")
-	    set -l m (math "$total_s / 60 % 60")
-	    set -l h (math "$total_s / 3600")
-	    set -l human ""
-	    if test $h -gt 0
-		set human (printf "%dh %dm %ds" $h $m $s)
-	    else if test $m -gt 0
-		set human (printf "%dm %ds" $m $s)
-	    else
-		set human (printf "%ds" $s)
-	    end
+          	    set -l total_s (math --scale=0 "$dur/1000")
+          	    set -l s (math "$total_s % 60")
+          	    set -l m (math "$total_s / 60 % 60")
+          	    set -l h (math "$total_s / 3600")
+          	    set -l human ""
+          	    if test $h -gt 0
+          		set human (printf "%dh %dm %ds" $h $m $s)
+          	    else if test $m -gt 0
+          		set human (printf "%dm %ds" $m $s)
+          	    else
+          		set human (printf "%ds" $s)
+          	    end
 
-	    set -l title "Done in $human"
-	    test "$exit_status" -ne 0; and set title "Failed ($exit_status) after $human"
-	    set -l wd (string replace --regex "^$HOME" "~" "$PWD")
+          	    set -l title "Done in $human"
+          	    test "$exit_status" -ne 0; and set title "Failed ($exit_status) after $human"
+          	    set -l wd (string replace --regex "^$HOME" "~" "$PWD")
 
-	    set -l urgency normal
-	    test "$exit_status" -ne 0; and set urgency critical
-	    notify-send --hint=int:transient:1 --urgency="$urgency" \
-		--icon=utilities-terminal --app-name=fish --expire-time=3000 \
-		"$title" "$wd/ $argv[1]"
-	  '';
-	  onEvent = "fish_postexec";
+          	    set -l urgency normal
+          	    test "$exit_status" -ne 0; and set urgency critical
+          	    notify-send --hint=int:transient:1 --urgency="$urgency" \
+          		--icon=utilities-terminal --app-name=fish --expire-time=3000 \
+          		"$title" "$wd/ $argv[1]"
+          	  '';
+        onEvent = "fish_postexec";
       };
     };
   };
@@ -198,10 +199,10 @@
   };
 
   programs.starship = {
-	  enable = true;
-	  enableFishIntegration = true;
-	  presets = [ "nerd-font-symbols" ];
-	  configPath = "${config.home.homeDirectory}/.config/starship/starship.toml";
-	  # settings = {};
+    enable = true;
+    enableFishIntegration = true;
+    presets = [ "nerd-font-symbols" ];
+    configPath = "${config.home.homeDirectory}/.config/starship/starship.toml";
+    # settings = {};
   };
 }
