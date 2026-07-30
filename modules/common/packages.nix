@@ -2,47 +2,50 @@
 {
   environment.systemPackages = with pkgs; [
     # ── General CLI ──
+    bitwarden-cli
+    btop
+    duf
+    entr
+    eza
     fd
     file
-    git
-    jq
     fzf
+    git
+    gping
+    gum
+    hexyl
+    htop
+    imagemagick
+    jq
     killall
     lsof
     man-pages
+    ncdu
     ripgrep
     ripgrep-all
+    socat
+    sops
+    stow
+    tldr
     tree
     unzip
     wget
     xdg-utils
-    socat
-    entr
-    duf
-    ncdu
-    htop
-    btop
-    gping
-    hexyl
-    tldr
-    gum
-    stow
-    eza
-    imagemagick
+    zellij
 
     # ── Editor / LSP / formatting support ──
+    gcc
+    marksman
     neovim
-    vim
     nixd
     nixfmt
-    marksman
-    tinymist
-    tree-sitter
-    stylua
     shellcheck
     shfmt
+    stylua
+    tinymist
+    tree-sitter
     treefmt
-    gcc
+    vim
 
     # ── bat ecosystem ──
     bat
@@ -55,34 +58,34 @@
 
     # ── Media / graphics ──
     ffmpeg
-    mpv
-    vlc
-    imv
     gimp
+    imv
+    mpv
     satty
+    vlc
 
     # ── Desktop / session utilities ──
-    udiskie
-    pavucontrol
-    pamixer
     cava
-    libreoffice
-    mimeo
-    qt6.qtwayland
-    qt6Packages.qt6ct
-    lowfi
-    obsidian
     kdePackages.dolphin
     kdePackages.dolphin-plugins
+    libreoffice
+    lowfi
+    mimeo
+    obsidian
+    pamixer
+    pavucontrol
+    qt6.qtwayland
+    qt6Packages.qt6ct
+    udiskie
 
     # ── System / hardware ──
+    # power-profiles-daemon
     # tlp
     # tlp-pd
-    # power-profiles-daemon
-    libnotify
-    openssl
     coreutils
     curl
+    libnotify
+    openssl
 
     # ── Debuggers ──
     gdb
