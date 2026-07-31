@@ -82,6 +82,22 @@
           hostname = "zennix";
           username = "grip";
         };
+        iona = mkHost {
+          hostname = "iona";
+          username = "grip";
+        };
+        echo = mkHost {
+          hostname = "echo";
+          username = "grip";
+        };
+        xena = mkHost {
+          hostname = "xena";
+          username = "grip";
+        };
+        k480 = mkHost {
+          hostname = "k480";
+          username = "x0d";
+        };
       };
     };
 }

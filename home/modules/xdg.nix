@@ -64,6 +64,7 @@ in
     EDITOR = "nvim";
     VISUAL = "nvim";
     CLICOLOR = "1";
+    LS_COLOR = "...";
     MANPAGER = "batman";
   };
 }

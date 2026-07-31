@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, username, ... }:
 {
   zramSwap.enable = true;
 
@@ -36,7 +36,23 @@
     variant = "";
   };
 
+  system.autoUpgrade = {
+    enable = true;
+    flake = "path:/home/${username}/.config/nixconfig#${config.networking.hostName}";
+    dates = "Sat *-*-* 10:00:00";
+    allowReboot = false;
+  };
+
+  systemd.services.nixos-upgrade.preStart = ''
+    cd /home/${username}/.config/nixconfig
+    if [ -n "$(git status --porcelain -- . ':!flake.lock')" ]; then
+      echo "Uncommitted changes outside flake.lock detected — aborting autoUpgrade."
+      exit 1
+    fi
+  '';
+
   nixpkgs.config.allowUnfree = true;
   documentation.man.man-db.enable = true;
   services.udisks2.enable = true;
+  services.fstrim.enable = true;
 }

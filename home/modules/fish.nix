@@ -201,8 +201,6 @@
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
-    presets = [ "nerd-font-symbols" ];
-    configPath = "${config.home.homeDirectory}/.config/starship/starship.toml";
-    # settings = {};
+    enableBashIntegration = true;
   };
 }
