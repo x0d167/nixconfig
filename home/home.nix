@@ -6,6 +6,7 @@
     ./modules/fish.nix
     ./modules/git.nix
     ./modules/hyprland.nix
+    ./modules/jujutsu.nix
     ./modules/kitty.nix
     ./modules/packages.nix
     ./modules/scripts.nix

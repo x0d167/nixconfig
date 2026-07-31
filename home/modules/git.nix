@@ -1,4 +1,4 @@
-{ pkgs,... }:
+{ pkgs, ... }:
 {
   programs.git = {
     enable = true;
@@ -36,9 +36,18 @@
         sshCommand = "ssh -i ~/.ssh/id_ed25519_sk_rk_key2";
       };
 
-      url."git@github.com:".insteadOf = [ "gh:" "https://github.com/" ];
+      url."git@github.com:".insteadOf = [
+        "gh:"
+        "https://github.com/"
+      ];
     };
-    ignores = [ "*.swp" "*~" ".DS_Store" "result" ".direnv" ];
+    ignores = [
+      "*.swp"
+      "*~"
+      ".DS_Store"
+      "result"
+      ".direnv"
+    ];
   };
 
   programs.gh = {
@@ -57,6 +66,8 @@
     };
   };
 
-
-  home.packages = with pkgs; [ diffnav serie ];
+  home.packages = with pkgs; [
+    diffnav
+    serie
+  ];
 }
