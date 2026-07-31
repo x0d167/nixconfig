@@ -22,6 +22,9 @@
     rustfmt
 
     devenv
+    just
+    just-lsp
+    just-formatter
   ];
 
   programs.direnv = {
