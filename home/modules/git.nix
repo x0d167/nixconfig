@@ -36,6 +36,10 @@
         sshCommand = "ssh -i ~/.ssh/id_ed25519_sk_rk_key2";
       };
 
+      safe = {
+        directory = "~/.config/nixconfig";
+      };
+
       url."git@github.com:".insteadOf = [
         "gh:"
         "https://github.com/"
